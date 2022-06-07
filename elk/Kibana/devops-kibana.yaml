@@ -2,7 +2,7 @@ apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
   name: devops-kibana
-  namespace: devops-elasticsearch
+  namespace: elk
 spec:
   version: 7.7.1
   count: 3
@@ -39,6 +39,6 @@ spec:
             nodeSelectorTerms:
             - matchExpressions:
               - key: name
-                 operator: In
-                 values:
-                 - elk
+                operator: In
+                values:
+                - elk
