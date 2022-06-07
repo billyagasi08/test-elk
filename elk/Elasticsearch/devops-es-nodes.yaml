@@ -100,3 +100,12 @@ spec:
         storageClassName: storageclass-ssd
   secureSettings:
   - secretName: elasticsearch-gcs-credential
+    affinity:
+     nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+         nodeSelectorTerms:
+           - matchExpressions:
+               - key: name
+                 operator: In
+                 values:
+                   - elk
