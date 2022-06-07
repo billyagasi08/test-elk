@@ -11,6 +11,7 @@ spec:
   version: 7.7.1
   nodeSets:
   - name: master
+    count: 1
     config:
       node.attr.attr_name: attr_value
       node.master: true
@@ -47,7 +48,17 @@ spec:
             value: "1000"
           - name: "thread_pool.write.queue_size"
             value: "3000"
-    count: 1
+
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: name
+                  operator: In
+                  values:
+                  - elk
+  
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -58,6 +69,7 @@ spec:
           requests:
             storage: 1Gi
         storageClassName: storageclass-ssd
+
   - name: data
     config:
       node.attr.attr_name: attr_value
@@ -87,6 +99,17 @@ spec:
           resources:
             limits:
               memory: 1Gi
+
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: name
+                  operator: In
+                  values:
+                  - elk
+
     count: 1
     volumeClaimTemplates:
     - metadata:
@@ -100,12 +123,3 @@ spec:
         storageClassName: storageclass-ssd
   secureSettings:
   - secretName: elasticsearch-gcs-credential
-    affinity:
-     nodeAffinity:
-       requiredDuringSchedulingIgnoredDuringExecution:
-         nodeSelectorTerms:
-           - matchExpressions:
-               - key: name
-                 operator: In
-                 values:
-                   - elk
