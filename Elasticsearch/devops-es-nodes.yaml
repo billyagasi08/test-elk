@@ -1,0 +1,102 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1beta1
+kind: Elasticsearch
+metadata:
+  name: devops-es-nodes
+  namespace: devops-elasticsearch
+spec:
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true  
+  version: 7.7.1
+  nodeSets:
+  - name: master
+    config:
+      node.attr.attr_name: attr_value
+      node.master: true
+      node.data: false
+      node.ingest: false
+      node.ml: false
+      xpack.ml.enabled: true
+      node.remote_cluster_client: false
+      node.store.allow_mmap: false
+    podTemplate:
+      metadata:
+        labels:
+          env: staging
+          app: elasticsearch
+          owner: devops
+          master: "true"
+      spec:
+        initContainers:
+        - name: gcs-plugin-install
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: 2Gi
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms1g -Xmx1g"
+          - name: "thread_pool.search.queue_size"
+            value: "1000"
+          - name: "thread_pool.write.queue_size"
+            value: "3000"
+    count: 3
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: storageclass-ssd
+  - name: data
+    config:
+      node.attr.attr_name: attr_value
+      node.master: false
+      node.data: true
+      node.ingest: true
+      node.ml: true
+      node.remote_cluster_client: false
+      node.store.allow_mmap: false
+    podTemplate:
+      metadata:
+        labels:
+          env: staging
+          app: elasticsearch
+          owner: devops
+          master: "false"
+      spec:
+        initContainers:
+        - name: gcs-plugin-install
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-gcs
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: 2Gi
+    count: 5
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Gi
+        storageClassName: storageclass-ssd
+  secureSettings:
+  - secretName: elasticsearch-gcs-credential
