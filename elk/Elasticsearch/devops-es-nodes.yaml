@@ -2,7 +2,7 @@ apiVersion: elasticsearch.k8s.elastic.co/v1beta1
 kind: Elasticsearch
 metadata:
   name: devops-es-nodes
-  namespace: devops-elasticsearch
+  namespace: elk
 spec:
   http:
     tls:
