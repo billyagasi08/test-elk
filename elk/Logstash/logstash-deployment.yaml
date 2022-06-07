@@ -4,7 +4,7 @@ metadata:
   labels:
     app: logstash
   name: logstash
-  namespace: devops-elasticsearch
+  namespace: elk
 spec:
   replicas: 1 
   selector:
@@ -37,6 +37,15 @@ spec:
           mountPath: /usr/share/logstash/config
         - name: logstash-pipeline-volume
           mountPath: /usr/share/logstash/pipeline
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - elk
       volumes:
       - name: config-volume
         configMap:
