@@ -39,7 +39,7 @@ spec:
         - name: elasticsearch
           resources:
             limits:
-              memory: 2Gi
+              memory: 1Gi
           env:
           - name: ES_JAVA_OPTS
             value: "-Xms1g -Xmx1g"
@@ -47,7 +47,7 @@ spec:
             value: "1000"
           - name: "thread_pool.write.queue_size"
             value: "3000"
-    count: 3
+    count: 1
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -56,7 +56,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 2Gi
+            storage: 1Gi
         storageClassName: storageclass-ssd
   - name: data
     config:
@@ -86,8 +86,8 @@ spec:
         - name: elasticsearch
           resources:
             limits:
-              memory: 2Gi
-    count: 5
+              memory: 1Gi
+    count: 1
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -96,7 +96,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 500Gi
+            storage: 10Gi
         storageClassName: storageclass-ssd
   secureSettings:
   - secretName: elasticsearch-gcs-credential
