@@ -33,3 +33,12 @@ spec:
           limits:
             memory: 2Gi
             cpu: 2
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: name
+                 operator: In
+                 values:
+                 - elk
