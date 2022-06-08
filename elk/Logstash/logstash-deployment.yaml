@@ -23,7 +23,7 @@ spec:
           - containerPort: 5044
         env:
         - name: ES_HOSTS
-          value: "http://10.116.8.37:9200"
+          value: "http://xxx:9200"
         - name: ES_USER
           value: "elastic"
         - name: ES_PASSWORD
