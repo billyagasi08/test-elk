@@ -7,8 +7,6 @@ metadata:
   namespace: elk
 spec:
   replicas: 1
-  elasticsearchRef:
-    name: devops-es-nodes
   selector:
     matchLabels:
       app: logstash
