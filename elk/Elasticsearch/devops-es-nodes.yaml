@@ -57,7 +57,7 @@ spec:
                 - key: name
                   operator: In
                   values:
-                  - elk
+                  - elk-master
   
     volumeClaimTemplates:
     - metadata:
@@ -108,7 +108,7 @@ spec:
                 - key: name
                   operator: In
                   values:
-                  - elk
+                  - elk-data
 
     count: 1
     volumeClaimTemplates:
